@@ -1,0 +1,232 @@
+<odoo>
+    <data noupdate="1">
+        <!-- ================================================================= -->
+        <!-- CONTACTS : Organisateurs                                          -->
+        <!-- ================================================================= -->
+        <record id="partner_demo_organizer_1" model="res.partner">
+            <field name="name">Awa Traoré</field>
+            <field name="function">Event &amp; Wedding Planner</field>
+            <field name="email">awa.traore@example.com</field>
+            <field name="phone">+225 07 01 02 03 04</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_organizer_2" model="res.partner">
+            <field name="name">Jean-Marc Koffi</field>
+            <field name="function">Directeur Artistique &amp; Communication</field>
+            <field name="email">jm.koffi@example.com</field>
+            <field name="phone">+225 05 11 22 33 44</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- CONTACTS : Invités                                                -->
+        <!-- ================================================================= -->
+        <record id="partner_demo_guest_1" model="res.partner">
+            <field name="name">Sarah Bamba</field>
+            <field name="function">Responsable Marketing</field>
+            <field name="email">sarah.bamba@example.com</field>
+            <field name="phone">+225 07 45 67 89 01</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_2" model="res.partner">
+            <field name="name">Marc Diallo</field>
+            <field name="function">Ingénieur Systèmes</field>
+            <field name="email">marc.diallo@example.com</field>
+            <field name="phone">+225 01 23 45 67 89</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_3" model="res.partner">
+            <field name="name">Aminata Touré</field>
+            <field name="function">Consultante RH</field>
+            <field name="email">aminata.toure@example.com</field>
+            <field name="phone">+225 05 87 65 43 21</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_4" model="res.partner">
+            <field name="name">Christian Kouassi</field>
+            <field name="function">Développeur Senior</field>
+            <field name="email">christian.kouassi@example.com</field>
+            <field name="phone">+225 07 33 44 55 66</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_5" model="res.partner">
+            <field name="name">Fatou N'Diaye</field>
+            <field name="function">Designer UI/UX</field>
+            <field name="email">fatou.ndiaye@example.com</field>
+            <field name="phone">+225 01 99 88 77 66</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_6" model="res.partner">
+            <field name="name">David Koné</field>
+            <field name="function">Chef de Projet Digital</field>
+            <field name="email">david.kone@example.com</field>
+            <field name="phone">+225 05 44 33 22 11</field>
+            <field name="city">Bouaké</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_7" model="res.partner">
+            <field name="name">Élodie Gnahoré</field>
+            <field name="function">Journaliste &amp; Rédactrice</field>
+            <field name="email">elodie.gnahore@example.com</field>
+            <field name="phone">+225 07 66 77 88 99</field>
+            <field name="city">Grand-Bassam</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_8" model="res.partner">
+            <field name="name">Yannick Yao</field>
+            <field name="function">Analyste Financier</field>
+            <field name="email">yannick.yao@example.com</field>
+            <field name="phone">+225 01 12 34 56 78</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_9" model="res.partner">
+            <field name="name">Marie-Ange Brou</field>
+            <field name="function">Avocate d'Affaires</field>
+            <field name="email">marieange.brou@example.com</field>
+            <field name="phone">+225 05 55 66 77 88</field>
+            <field name="city">Abidjan</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <record id="partner_demo_guest_10" model="res.partner">
+            <field name="name">Stéphane Diop</field>
+            <field name="function">Directeur des Opérations</field>
+            <field name="email">stephane.diop@example.com</field>
+            <field name="phone">+225 07 77 88 99 00</field>
+            <field name="city">Yamoussoukro</field>
+            <field name="is_company" eval="False"/>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- ÉVÉNEMENTS                                                        -->
+        <!-- ================================================================= -->
+        <!-- Événement 1 : Gala d'Excellence (15 jours dans le futur) -->
+        <record id="event_demo_1" model="fiesta.event">
+            <field name="name">Gala d'Excellence Fiesta</field>
+            <field name="description">Grande soirée annuelle de célébration, remise de distinctions et cocktail dînatoire.</field>
+            <field name="contact_id" ref="partner_demo_organizer_1"/>
+            <field name="date" eval="(datetime.date() + datetime.timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="time">19.0</field>
+            <field name="location">Hôtel Sofitel Ivoire, Salon Massai</field>
+            <field name="party_theme">2</field>
+            <field name="max_guest">15</field>
+        </record>
+
+        <!-- Événement 2 : Afterwork Networking & Tech (22 jours dans le futur) -->
+        <record id="event_demo_2" model="fiesta.event">
+            <field name="name">Afterwork Networking &amp; Innovation</field>
+            <field name="description">Rencontre conviviale entre professionnels de la tech et créatifs avec buffet et échanges informels.</field>
+            <field name="contact_id" ref="partner_demo_organizer_2"/>
+            <field name="date" eval="(datetime.date() + datetime.timedelta(days=22)).strftime('%Y-%m-%d')"/>
+            <field name="time">18.5</field>
+            <field name="location">Rooftop Le Waka, Plateau</field>
+            <field name="party_theme">4</field>
+            <field name="max_guest">12</field>
+        </record>
+
+        <!-- Événement 3 : Dîner VIP & Gastronomie (28 jours dans le futur) -->
+        <record id="event_demo_3" model="fiesta.event">
+            <field name="name">Dîner VIP &amp; Dégustation Gastronomique</field>
+            <field name="description">Dîner intimiste réunissant des partenaires stratégiques autour d'un menu d'exception préparé par un grand chef.</field>
+            <field name="contact_id" ref="partner_demo_organizer_1"/>
+            <field name="date" eval="(datetime.date() + datetime.timedelta(days=28)).strftime('%Y-%m-%d')"/>
+            <field name="time">20.0</field>
+            <field name="location">Villa Mont d'Or, Cocody Ambassades</field>
+            <field name="party_theme">7</field>
+            <field name="max_guest">8</field>
+        </record>
+
+        <!-- ================================================================= -->
+        <!-- 10 INVITATIONS AVEC CONFIRMATIONS (Heure d'arrivée & Compagnons)   -->
+        <!-- ================================================================= -->
+        <!-- Invitations pour l'Événement 1 (Heure de l'event : 19h00, buffer 2h => 17h00 - 21h00) -->
+        <record id="invitation_demo_1" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_1"/>
+            <field name="guest_id" ref="partner_demo_guest_1"/>
+            <field name="arrival_time">19.0</field>
+            <field name="number_of_companions">1</field>
+        </record>
+
+        <record id="invitation_demo_2" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_1"/>
+            <field name="guest_id" ref="partner_demo_guest_2"/>
+            <field name="arrival_time">19.5</field>
+            <field name="number_of_companions">0</field>
+        </record>
+
+        <record id="invitation_demo_3" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_1"/>
+            <field name="guest_id" ref="partner_demo_guest_3"/>
+            <field name="arrival_time">18.5</field>
+            <field name="number_of_companions">2</field>
+        </record>
+
+        <record id="invitation_demo_4" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_1"/>
+            <field name="guest_id" ref="partner_demo_guest_4"/>
+            <field name="arrival_time">20.0</field>
+            <field name="number_of_companions">1</field>
+        </record>
+
+        <!-- Invitations pour l'Événement 2 (Heure de l'event : 18h30, buffer 2h => 16h30 - 20h30) -->
+        <record id="invitation_demo_5" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_2"/>
+            <field name="guest_id" ref="partner_demo_guest_5"/>
+            <field name="arrival_time">18.5</field>
+            <field name="number_of_companions">1</field>
+        </record>
+
+        <record id="invitation_demo_6" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_2"/>
+            <field name="guest_id" ref="partner_demo_guest_6"/>
+            <field name="arrival_time">19.0</field>
+            <field name="number_of_companions">0</field>
+        </record>
+
+        <record id="invitation_demo_7" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_2"/>
+            <field name="guest_id" ref="partner_demo_guest_7"/>
+            <field name="arrival_time">18.0</field>
+            <field name="number_of_companions">2</field>
+        </record>
+
+        <!-- Invitations pour l'Événement 3 (Heure de l'event : 20h00, buffer 2h => 18h00 - 22h00) -->
+        <record id="invitation_demo_8" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_3"/>
+            <field name="guest_id" ref="partner_demo_guest_8"/>
+            <field name="arrival_time">20.0</field>
+            <field name="number_of_companions">1</field>
+        </record>
+
+        <record id="invitation_demo_9" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_3"/>
+            <field name="guest_id" ref="partner_demo_guest_9"/>
+            <field name="arrival_time">20.5</field>
+            <field name="number_of_companions">0</field>
+        </record>
+
+        <record id="invitation_demo_10" model="fiesta.event.invitation">
+            <field name="event_id" ref="event_demo_3"/>
+            <field name="guest_id" ref="partner_demo_guest_10"/>
+            <field name="arrival_time">19.5</field>
+            <field name="number_of_companions">1</field>
+        </record>
+    </data>
+</odoo>

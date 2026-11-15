@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="res_partner_event_dashbord_action" model="ir.actions.client">
+        <field name="name">Tableau de bord des événements</field>
+        <field name="tag">event_dashboard_tag</field>
+    </record>
+
+    <menuitem id="menu_custom_contacts_item"
+            name="Tableau de bord"
+            parent="contacts.menu_contacts"
+            action="res_partner_event_dashbord_action"
+            sequence="50"/>
+</odoo>

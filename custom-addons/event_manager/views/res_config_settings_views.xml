@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.event_manager</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Gestion des Événements" string="Gestion des Événements" name="event_manager" data-key="event_manager">
+                    <block title="Gestion des Événements" name="event_manager_setting_container">
+                        <setting id="confirmation_days_setting" help="Définir la période de confirmation de présence">
+                            <label for="confirmation_days" string="Délai limite de confirmation" class="fw-bold d-block mb-1"/>
+                            <div class="content-group mt16">
+                                <field name="confirmation_days" class="oe_inline"/>
+                                <span class="o_form_label ms-2">Jour(s)</span>
+                            </div>
+                        </setting>
+                        <setting id="arrival_time_buffer_setting" help="Définir la marge d'heure d'arrivée">
+                            <label for="arrival_time_buffer" string="Marge horaire d'arrivée" class="fw-bold d-block mb-1"/>
+                            <div class="content-group mt16">
+                                <field name="arrival_time_buffer" class="oe_inline"/>
+                                <span class="o_form_label ms-2">Heure(s)</span>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_manager_settings_action" model="ir.actions.act_window">
+        <field name="name">Setting</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'event_manager', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="event_manager_settings_menu" 
+        name="Paramètres Événements" 
+        action="event_manager_settings_action" 
+        parent="contacts.res_partner_menu_config" 
+        sequence="100"/>
+</odoo>

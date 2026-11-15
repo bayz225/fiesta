@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_fiesta_event_form" model="ir.ui.view">
+        <field name="name">fiesta.event.form</field>
+        <field name="model">fiesta.event</field>
+        <field name="arch" type="xml">
+            <form string="Mon événement">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <p>
+                            <label for="description" string="Description"/>
+                            <field name="description" placeholder="Entrez la description de l'événement"/>
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contact_id" readonly="1" widget="many2one_avatar"/>
+                            <field name="date"/>
+                            <field name="time"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="party_theme" widget="color_picker"/>
+                            <field name="max_guest"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Invités" name="guest_tab">
+                            <field name="invitation_line_ids" readonly="1">
+                                <list create="false" delete="false" edit="false" no_open="1">
+                                    <field name="guest_id" widget="many2one_avatar"/>
+                                    <field name="arrival_time" widget="float_time" placeholder="--:--" options="{'no_create': True}"/>
+                                    <field name="number_of_companions"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fiesta_event" model="ir.actions.act_window">
+        <field name="name">Événement organisé</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fiesta.event</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'default_event_id': active_id, 'default_contact_id': active_id}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

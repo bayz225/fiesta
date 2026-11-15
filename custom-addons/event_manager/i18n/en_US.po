@@ -1,0 +1,684 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_manager
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e-20260630\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-17 19:29+0000\n"
+"PO-Revision-Date: 2026-09-17 19:29+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "<span class=\"o_form_label ms-2\">Heure(s)</span>"
+msgstr "<span class=\"o_form_label ms-2\">Hour(s)</span>"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "<span class=\"o_form_label ms-2\">Jour(s)</span>"
+msgstr "<span class=\"o_form_label ms-2\">Day(s)</span>"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_kanban_inherit
+msgid ""
+"<span style=\"margin-left: 4px;\">\n"
+"                        Invitations\n"
+"                    </span>"
+msgstr ""
+"<span style=\"margin-left: 4px;\">\n"
+"                        Invitations\n"
+"                    </span>"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_contact_to_event_wizard_form
+msgid "Ajouter"
+msgstr "Add"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.action_add_contact_to_event_wizard
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_contact_to_event_wizard_form
+msgid "Ajouter des invités"
+msgstr "Add Guests"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_add_contact_to_event_wizard
+msgid "Ajouter des invités à un événement (Wizard)"
+msgstr "Add Guests to an Event"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_add_guest_info_to_event_wizard
+msgid "Ajouter les informations d'arrivés d'un invité (Wizard)"
+msgstr "Add Guest Information to an Event"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_custom_pivot
+msgid "Analyse Contacts"
+msgstr "Contact Analysis"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Analyse de l'évolution"
+msgstr "Evolution Analysis"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Analyse des 6 derniers mois"
+msgstr "Analysis of the last 6 months"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_contact_to_event_wizard_form
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_guest_info_to_event
+msgid "Annuler"
+msgstr "Cancel"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Aucun organisateur"
+msgstr "No organizer"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Aucun événement trouvé"
+msgstr "No event found"
+
+#. module: event_manager
+#: model_terms:ir.actions.act_window,help:event_manager.action_contacted_event_manage
+msgid "Aucune invitation à un événement trouvé !"
+msgstr "No invitation to an event found!"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Avec le max d'événements"
+msgstr "With the most events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Avec le min d'événements"
+msgstr "With the least events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Completion"
+msgstr "Completion"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_res_config_settings
+msgid "Config Settings"
+msgstr "Config Settings"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__is_expired_confirmation
+msgid "Confirmation expirée"
+msgstr "Confirmation expired"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Confirmer ma présence"
+msgstr "Confirm my presence"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__create_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__create_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__create_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__create_uid
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__create_uid
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__create_uid
+msgid "Created by"
+msgstr "Created by"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__create_date
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__create_date
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__create_date
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__create_date
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__create_date
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__create_date
+msgid "Created on"
+msgstr "Created on"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+msgid "Créer"
+msgstr "Create"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.action_add_event
+#: model:ir.model,name:event_manager.model_add_event_wizard
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Créer un événement"
+msgstr "Create an Event"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__date
+msgid "Date"
+msgstr "Date"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__date
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__event_date
+msgid "Date de l'événement"
+msgstr "Event Date"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_config_settings__confirmation_days
+msgid "Date limite de confirmation de présence (jours)"
+msgstr "Deadline for confirmation of presence (days)"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__description
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__description
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+#: model_terms:ir.ui.view,arch_db:event_manager.view_fiesta_event_form
+msgid "Description"
+msgstr "Description"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__display_name
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__display_name
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__display_name
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__display_name
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__display_name
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__display_name
+#: model:ir.model.fields,field_description:event_manager.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "Définir la marge d'heure d'arrivée"
+msgstr "Define the arrival time margin"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "Définir la période de confirmation de présence"
+msgstr "Define the confirmation period"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "Délai limite de confirmation"
+msgstr "Deadline for confirmation"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_guest_info_to_event
+msgid "Enregistrer"
+msgstr "Save"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+#: model_terms:ir.ui.view,arch_db:event_manager.view_fiesta_event_form
+msgid "Entrez la description de l'événement"
+msgstr "Enter the event description"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+msgid "Entrez le lieu de l'événement"
+msgstr "Enter the event location"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "Gestion des Événements"
+msgstr "Event Management"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__time
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__arrival_time
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__time
+msgid "Heure"
+msgstr "Time"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__arrival_time
+msgid "Heure d'arrivée"
+msgstr "Arrival time"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__event_time
+msgid "Heure de l'événement"
+msgstr "Event time"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__id
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__id
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__id
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__id
+#: model:ir.model.fields,field_description:event_manager.field_res_config_settings__id
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.action_add_guest_info_to_event
+msgid "Informations d'arrivée"
+msgstr "Arrival information"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_fiesta_event_invitation
+msgid "Invitation à un événement"
+msgstr "Event invitation"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__invitation_line_ids
+msgid "Invitations"
+msgstr "Invitations"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__invitation_ids
+#: model:ir.model.fields,field_description:event_manager.field_res_users__invitation_ids
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Invitations reçues"
+msgstr "Invitations received"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Inviter"
+msgstr "Invite"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__guest_id
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__guest_id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__guest_id
+msgid "Invité"
+msgstr "Guest"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__guest_ids
+#: model_terms:ir.ui.view,arch_db:event_manager.view_fiesta_event_form
+msgid "Invités"
+msgstr "Guests"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__excluded_guest_ids
+msgid "Invités exclus"
+msgstr "Excluded guests"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_contact_to_event_wizard_form
+msgid "Invités à ajouter"
+msgstr "Guests to add"
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+msgid "L'heure d'arrivée doit être comprise entre %sH et %sH."
+msgstr "The arrival time must be between %sH and %sH."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event.py:0
+msgid "L'heure de l'événement doit être comprise entre 00:00 et 23:59."
+msgstr "The event time must be between 00:00 and 23:59."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event.py:0
+#: code:addons/event_manager/wizard/add_event.py:0
+msgid "La date de l'événement ne peut pas être dans le passé."
+msgstr "The event date cannot be in the past."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+msgid ""
+"La date limite de confirmation de présence est dépassée. Vous ne pouvez plus"
+" ajouter ou modifier les informations."
+msgstr "The deadline for confirmation of presence has passed. You can no longer"
+" add or modify the information."
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__write_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__write_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__write_uid
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__write_uid
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__write_uid
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__write_date
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__write_date
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__write_date
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__write_date
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__write_date
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+msgid "Le contact %(guest)s est déjà inscrit comme invité à cet événement !"
+msgstr "The contact %(guest)s is already registered as a guest at this event!"
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+msgid "Le contact %(guest)s est spécifié en double dans cette opération !"
+msgstr "The contact %(guest)s is specified twice in this operation!"
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event.py:0
+msgid "Le lieu de l'événement est requis."
+msgstr "The event location is required."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+#: code:addons/event_manager/wizard/add_guest_info_event.py:0
+msgid "Le nombre d'accompagnants ne peut pas être négatif."
+msgstr "The number of companions cannot be negative."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event.py:0
+#: code:addons/event_manager/wizard/add_event.py:0
+msgid "Le nombre maximum d'invités doit être supérieur à 4."
+msgstr "The maximum number of guests must be greater than 4."
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__location
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__location
+msgid "Lieu"
+msgstr "Location"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__event_location
+msgid "Lieu de l'événement"
+msgstr "Event location"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_add_contact_to_event_wizard_line
+msgid "Ligne d'ajout d'invité dans le wizard"
+msgstr "Line of adding an invitation to the wizard"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Liste de 10 dernières activités enregistrés"
+msgstr "List of 10 last registered activities"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__line_ids
+msgid "Liste des invités à ajouter"
+msgstr "List of guests to add"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_config_settings__arrival_time_buffer
+msgid "Marge d'heure d'arrivée (heures)"
+msgstr "Arrival time buffer (hours)"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.res_config_settings_view_form
+msgid "Marge horaire d'arrivée"
+msgstr "Arrival time buffer"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.action_contacted_event_manage
+#: model_terms:ir.ui.view,arch_db:event_manager.view_contacted_event_manage_list
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Mes invitations"
+msgstr "My invitations"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Mes événements"
+msgstr "My events"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_fiesta_event_form
+msgid "Mon événement"
+msgstr "My event"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__name
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__name
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__event_name
+#: model_terms:ir.ui.view,arch_db:event_manager.view_add_event_form
+msgid "Nom de l'événement"
+msgstr "Event name"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__number_of_companions
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__number_of_companions
+msgid "Nombre d'accompagnants"
+msgstr "Number of companions"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__event_count
+#: model:ir.model.fields,field_description:event_manager.field_res_users__event_count
+msgid "Nombre d'événements"
+msgstr "Number of events"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__max_guest
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__max_guest
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__max_guest
+msgid "Nombre max d'invités"
+msgstr "Maximum number of guests"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__total_guest
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__total_guests_count
+#: model:ir.model.fields,field_description:event_manager.field_res_users__total_guests_count
+msgid "Nombre total d'invités"
+msgstr "Total number of guests"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__contact_id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__contact_id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__contact_id
+msgid "Organisateur"
+msgstr "Organizer"
+
+#. module: event_manager
+#: model:ir.ui.menu,name:event_manager.event_manager_settings_menu
+msgid "Paramètres Événements"
+msgstr "Event settings"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__available_places_char
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__available_places_int
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__available_places_char
+msgid "Places disponibles"
+msgstr "Available places"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__available_places_int
+msgid "Places disponibles int"
+msgstr "Available places int"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Période la plus active"
+msgstr "Most active period"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.event_manager_settings_action
+msgid "Setting"
+msgstr "Setting"
+
+#. module: event_manager
+#: model:ir.ui.menu,name:event_manager.menu_custom_contacts_item
+msgid "Tableau de bord"
+msgstr "Dashboard"
+
+#. module: event_manager
+#: model:ir.actions.client,name:event_manager.res_partner_event_dashbord_action
+msgid "Tableau de bord des événements"
+msgstr "Event Dashboard"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Taux de remplissage"
+msgstr "Occupancy rate"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_event_wizard__party_theme
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event__party_theme
+msgid "Thème"
+msgstr "Theme"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__event_list
+#: model:ir.model.fields,field_description:event_manager.field_res_users__event_list
+msgid "Tous les événements"
+msgstr "All events"
+
+#. module: event_manager
+#: model:ir.model,name:event_manager.model_fiesta_event
+msgid "Un événement"
+msgstr "An event"
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/wizard/add_contact_to_event.py:0
+msgid "Veuillez ajouter au moins un invité."
+msgstr "Please add at least one guest."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/models/fiesta_event_invitation.py:0
+msgid ""
+"Vous ne pouvez pas ajouter %s accompagnant(s). Nombre maximum "
+"d'accompagnants autorisés pour cette invitation : %s."
+msgstr "You cannot add %s companion(s). Maximum number of companions allowed for this invitation: %s."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/wizard/add_guest_info_event.py:0
+msgid ""
+"Vous ne pouvez pas ajouter (%s) compagnons. Le nombre de place disponible "
+"est de %s."
+msgstr "You cannot add (%s) companions. The number of available places is %s."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/wizard/add_contact_to_event.py:0
+msgid ""
+"Vous ne pouvez pas ajouter (%s) invités. Le nombre de place disponible est "
+"de %s."
+msgstr "You cannot add (%s) guests. The number of available places is %s."
+
+#. module: event_manager
+#. odoo-python
+#: code:addons/event_manager/wizard/add_guest_info_event.py:0
+msgid ""
+"Vous ne pouvez pas modifier le nombre de compagnons à (%s). Le nombre de "
+"place disponible est de %s."
+msgstr "You cannot modify the number of companions to (%s). The number of available places is %s."
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Wizard"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "invités"
+msgstr "guests"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Évolution des événements"
+msgstr "Evolution of events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Évolution des événements sur les 6 derniers mois"
+msgstr "Evolution of events over the last 6 months"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+#: model:ir.model.fields,field_description:event_manager.field_add_contact_to_event_wizard__event_id
+#: model:ir.model.fields,field_description:event_manager.field_add_guest_info_to_event_wizard__event_id
+#: model:ir.model.fields,field_description:event_manager.field_fiesta_event_invitation__event_id
+msgid "Événement"
+msgstr "Event"
+
+#. module: event_manager
+#: model:ir.actions.act_window,name:event_manager.action_fiesta_event
+msgid "Événement organisé"
+msgstr "Organized event"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Événements Récents"
+msgstr "Recent events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Événements de ce mois"
+msgstr "Events of this month"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Événements enregistrés"
+msgstr "Events saved"
+
+#. module: event_manager
+#: model_terms:ir.ui.view,arch_db:event_manager.view_partner_form_inherit
+msgid "Événements invités"
+msgstr "Invited events"
+
+#. module: event_manager
+#: model:ir.model.fields,field_description:event_manager.field_res_partner__events_organized_ids
+#: model:ir.model.fields,field_description:event_manager.field_res_users__events_organized_ids
+msgid "Événements organisés"
+msgstr "Organized events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "Événements à venir"
+msgstr "Upcoming events"
+
+#. module: event_manager
+#. odoo-javascript
+#: code:addons/event_manager/static/src/xml/dashboard.xml:0
+msgid "événements"
+msgstr "events"

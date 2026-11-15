@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_add_contact_to_event_wizard_form" model="ir.ui.view">
+        <field name="name">add.contact.to.event.wizard.form</field>
+        <field name="model">add.contact.to.event.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ajouter des invités">
+                <sheet>
+                    <field name="excluded_guest_ids" invisible="1"/>
+                    <group>
+                        <field name="event_id" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Invités à ajouter">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="guest_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Ajouter" name="action_add_contacts" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_add_contact_to_event_wizard" model="ir.actions.act_window">
+        <field name="name">Ajouter des invités</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">add.contact.to.event.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

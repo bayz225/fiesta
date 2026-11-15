@@ -1,0 +1,3 @@
+- [x] Variable de paramètre pour l'heure et la date limite de confirmation
+- [x] Données de test (d'événements et d'invitations)
+- [x] Prise en charge de l'anglais
