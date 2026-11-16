@@ -30,7 +30,7 @@
     </record>
 
     <record id="event_manager_settings_action" model="ir.actions.act_window">
-        <field name="name">Setting</field>
+        <field name="name">Paramètres Événements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>

@@ -4,7 +4,7 @@
         <!-- Conteneur principal -->
         <main class="main-content mt-1 border-radius-lg my-custom-dashboard">
             <div class="container-fluid py-4">
-                <h2 class="mb-3 fs-4">Dashboard</h2>
+                <h2 class="mb-3 fs-4">Tableau de bord</h2>
                 <!-- Ligne 1 : Cartes de Statistiques -->
                 <div class="row">
                     <!-- Carte 1 -->
@@ -137,7 +137,7 @@
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Organisateur</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Lieu</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Completion</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Disponibilité</th>
                                         </tr>
                                     </thead>
                                     <tbody>

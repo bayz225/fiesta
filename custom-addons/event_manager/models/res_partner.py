@@ -44,7 +44,7 @@ class ResPartner(models.Model):
     @api.depends('events_organized_ids', 'invitation_ids')
     def _compute_event_list(self):
         for partner in self:
-            partner.event_list = partner.invitation_ids.mapped('event_id')
+            partner.event_list = partner.events_organized_ids | partner.invitation_ids.mapped('event_id')
 
     @api.model
     def get_tiles_data(self):
@@ -52,9 +52,8 @@ class ResPartner(models.Model):
         first_day_current_month = today.replace(day=1)
         last_day_current_month = first_day_current_month + relativedelta(months=1) - timedelta(days=1)
         first_day_last_month = first_day_current_month - relativedelta(months=1)
-        last_day_last_month = first_day_current_month - timedelta(days=1)
         seven_days_ago = today - timedelta(days=7)
-        same_day_last_month = first_day_current_month - relativedelta(months=1) + timedelta(days=today.day - 1)
+        same_day_last_month = today - relativedelta(months=1)
 
         Event = self.env["fiesta.event"]
 
@@ -78,8 +77,8 @@ class ResPartner(models.Model):
         last_events_list = Event.search([], order="create_date desc", limit=10) # Derniers événements récents
         
         # Variation %
-        all_events_last_week_percentage = round(100 * events_created_last_7_days_count / (all_events_count if all_events_count > 0 else 0), 1) # Pourcentage du total créé durant les 7 derniers jours
-        all_events_fully_percentage = round(100 * all_events_fully / (all_events_count if all_events_count > 0 else 0), 1) # Pourcentage des événement remplis par rapport à tous les events
+        all_events_last_week_percentage = round(100 * events_created_last_7_days_count / all_events_count, 1) if all_events_count > 0 else 0.0
+        all_events_fully_percentage = round(100 * all_events_fully / all_events_count, 1) if all_events_count > 0 else 0.0
         this_month_events_percentage = 0
         if events_last_month > 0:
             this_month_events_percentage = round(((events_this_month - events_last_month) / events_last_month) * 100, 1)

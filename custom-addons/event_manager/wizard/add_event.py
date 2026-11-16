@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -26,17 +26,19 @@ class AddEventWizard(models.TransientModel):
             res['contact_id'] = self.env.context.get('active_id')
         return res
 
-    @api.constrains('date')
+    @api.constrains('date', 'time')
     def _check_event_date(self):
         for wizard in self:
             if wizard.date and wizard.date < fields.Date.today():
-                raise ValidationError(_("La date de l'événement ne peut pas être dans le passé."))
+                raise ValidationError("La date de l'événement ne peut pas être dans le passé.")
+            if wizard.time < 0.0 or wizard.time >= 24.0:
+                raise ValidationError("L'heure de l'événement doit être comprise entre 00:00 et 23:59.")
 
     @api.constrains('max_guest')
     def _check_max_guest(self):
         for wizard in self:
             if wizard.max_guest < 4:
-                raise ValidationError(_("Le nombre maximum d'invités doit être supérieur à 4."))
+                raise ValidationError("Le nombre maximum d'invités doit être supérieur ou égal à 4.")
 
     def action_add_event(self):
         self.ensure_one()

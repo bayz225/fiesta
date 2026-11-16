@@ -1,9 +1,10 @@
-from odoo import api, fields, models, Command, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
 
 class AddGuestInfoToEventWizard(models.TransientModel):
     _name = "add.guest.info.to.event.wizard"
-    _description = "Ajouter les informations d'arrivés d'un invité (Wizard)"
+    _description = "Assistant d'informations d'arrivée d'un invité"
 
     event_id = fields.Many2one(
         'fiesta.event',
@@ -54,20 +55,20 @@ class AddGuestInfoToEventWizard(models.TransientModel):
 
     def action_add_guest_info(self):
         self.ensure_one()
-        
+
         if self.number_of_companions and self.number_of_companions < 0:
             raise ValidationError(
-                _("Le nombre d'accompagnants ne peut pas être négatif.")
-            ) 
+                "Le nombre d'accompagnants ne peut pas être négatif."
+            )
 
         exist_line = self.event_id.invitation_line_ids.filtered(
             lambda line: line.guest_id == self.guest_id
         )
 
-        if not exist_line and self.number_of_companions > self.event_id.available_places_int:
+        if not exist_line and (1 + self.number_of_companions) > self.event_id.available_places_int:
             raise ValidationError(
-                _("Vous ne pouvez pas ajouter (%s) compagnons. Le nombre de place disponible est de %s.")
-                % (self.number_of_companions, self.event_id.available_places_int)
+                f"Vous ne pouvez pas ajouter ({1 + self.number_of_companions}) participant(s). "
+                f"Le nombre de places disponibles est de {self.event_id.available_places_int}."
             )
 
         if exist_line:
@@ -75,8 +76,8 @@ class AddGuestInfoToEventWizard(models.TransientModel):
 
             if new_available_places < self.number_of_companions:
                 raise ValidationError(
-                    _("Vous ne pouvez pas modifier le nombre de compagnons à (%s). Le nombre de place disponible est de %s.")
-                    % (self.number_of_companions, new_available_places)
+                    f"Vous ne pouvez pas modifier le nombre d'accompagnants à ({self.number_of_companions}). "
+                    f"Le nombre de places disponibles est de {new_available_places}."
                 )
             exist_line.write({
                 'arrival_time': self.arrival_time,
