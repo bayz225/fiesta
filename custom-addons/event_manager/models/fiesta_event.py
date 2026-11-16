@@ -119,13 +119,19 @@ class FiestaEvent(models.Model):
         deadline_days = int(self.env['ir.config_parameter'].sudo().get_param('event_manager.confirmation_days', 5))
         today = fields.Date.today()
         for event in self:
-            event.is_done = (event.date - datetime.timedelta(days=deadline_days)) <= today
+            if event.date:
+                event.is_done = (event.date - datetime.timedelta(days=deadline_days)) <= today
+            else:
+                event.is_done = False
 
     @api.depends('total_guest', 'max_guest')
     def _compute_can_add_guest(self):
         today = fields.Date.today()
         for event in self:
-            event.can_add_guest = event.total_guest < event.max_guest
+            if event.total_guest:
+                event.can_add_guest = event.total_guest < event.max_guest
+            else:
+                event.can_add_guest = False
 
     def action_confirm(self):
         today = fields.Date.today()

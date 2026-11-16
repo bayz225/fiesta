@@ -100,7 +100,13 @@ class FiestaEventInvitation(models.Model):
     @api.constrains('event_id', 'guest_id', 'arrival_time', 'number_of_companions')
     def _check_confirmation_deadline(self):
         for line in self:
-            if line.event_id and line.is_expired_confirmation:
+            if not line.event_id:
+                continue
+            if line.event_id.state in ('cancelled', 'done'):
+                raise ValidationError(
+                    "Impossible d'ajouter ou de modifier une invitation pour un événement annulé ou terminé."
+                )
+            if line.is_expired_confirmation:
                 raise ValidationError(
                     "La date limite de confirmation de présence est dépassée. "
                     "Vous ne pouvez plus ajouter ou modifier les informations."

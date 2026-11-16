@@ -30,9 +30,7 @@
 
         'views/menu.xml',
         'views/event_view.xml',
-        'views/contacted_event_view.xml',
         'views/contact_view.xml',
-        'views/res_partner_views.xml',
         'views/res_partner_dashboard_view.xml',
         'views/res_config_settings_views.xml',
     ],
