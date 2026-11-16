@@ -23,9 +23,12 @@
     'data': [
         'security/ir.model.access.csv',
         'security/event_security.xml',
+
         'wizard/add_event_view.xml',
         'wizard/add_contact_to_event_view.xml',
         'wizard/add_guest_info_event_view.xml',
+
+        'views/menu.xml',
         'views/event_view.xml',
         'views/contacted_event_view.xml',
         'views/contact_view.xml',
