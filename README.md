@@ -4,13 +4,21 @@ Fiesta est un environnement Odoo 19 conteneurisé, accompagné du module personn
 
 ## Aperçu
 
-Les captures d’écran et illustrations du projet sont stockées dans [`docs/screenshots/`](docs/screenshots/).
+### Tableau de bord
 
 ![Tableau de bord des événements](docs/screenshots/dashboard.png)
-![Liste des événement](docs/screenshots/event_list.png)
-![Fiche événement et invitations](docs/screenshots/event_form.png)
-![Fiche contact avec leurs événements et invitations](docs/screenshots/contact_form.png)
 
+### Liste des événement
+
+![Liste des événement](docs/screenshots/event_list.png)
+
+### Fiche d'événement
+
+![Fiche événement et invitations](docs/screenshots/event_form.png)
+
+### Fiche contact avec ces événements
+
+![Fiche contact avec ces événements et invitations](docs/screenshots/contact_form.png)
 
 ## Fonctionnalités
 
