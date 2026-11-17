@@ -31,7 +31,15 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
-            <field name="domain_force">['|', '|', ('create_uid', '=', user.id), ('contact_id', '=', user.partner_id.id), ('guest_ids', 'in', [user.partner_id.id])]</field>
+            <field name="domain_force">
+                ['|', '|', 
+                    ('create_uid', '=', user.id), 
+                    ('contact_id', '=', user.partner_id.id), 
+                    '&amp;', 
+                        ('guest_ids', 'in', [user.partner_id.id]), 
+                        ('state', '!=', 'draft')
+                ]
+            </field>
         </record>
 
         <!-- Événements : modification et suppression par l'organisateur uniquement -->

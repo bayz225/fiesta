@@ -17,7 +17,7 @@ class FiestaEventInvitation(models.Model):
     _order = 'create_date desc, id desc'
 
     _fiesta_event_guest_unique = models.Constraint(
-        "UNIQUE(event_id, partner_id)",
+        "UNIQUE(event_id, guest_id)",
         "Un contact ne peut être invité qu'une seule fois à un même événement."
     )
 

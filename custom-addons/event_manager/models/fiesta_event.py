@@ -138,7 +138,7 @@ class FiestaEvent(models.Model):
     def _compute_can_add_guest(self):
         today = fields.Date.today()
         for event in self:
-            if event.total_guest:
+            if event.max_guest:
                 event.can_add_guest = event.total_guest < event.max_guest
             else:
                 event.can_add_guest = False
