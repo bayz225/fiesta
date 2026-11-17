@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Groupe Responsable Événements -->
+        <record id="group_event_manager" model="res.groups">
+            <field name="name">Responsable Événements</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Nettoyage de l'ancienne règle (noupdate=True sur d'anciennes bases) -->
+        <delete model="ir.rule" search="[('name', '=', 'Événement : lecture et création pour tous les utilisateurs internes')]"/>
+
+        <!-- Événements : création pour soi-même uniquement (utilisateurs internes) -->
+        <record id="rule_fiesta_event_create_self" model="ir.rule">
+            <field name="name">Événement : création pour soi-même uniquement</field>
+            <field name="model_id" ref="model_fiesta_event"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('contact_id', '=', user.partner_id.id)]</field>
+        </record>
+
+        <!-- Événements : lecture limitée au créateur, à l'organisateur et aux invités -->
+        <record id="rule_fiesta_event_read_restricted" model="ir.rule">
+            <field name="name">Événement : lecture pour créateur, organisateur et invités</field>
+            <field name="model_id" ref="model_fiesta_event"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">
+                ['|', '|', 
+                    ('create_uid', '=', user.id), 
+                    ('contact_id', '=', user.partner_id.id), 
+                    '&amp;', 
+                        ('guest_ids', 'in', [user.partner_id.id]), 
+                        ('state', '!=', 'draft')
+                ]
+            </field>
+        </record>
+
+        <!-- Événements : modification et suppression par l'organisateur uniquement -->
+        <record id="rule_fiesta_event_write_unlink_organizer" model="ir.rule">
+            <field name="name">Événement : modification et suppression par l'organisateur uniquement</field>
+            <field name="model_id" ref="model_fiesta_event"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('contact_id', '=', user.partner_id.id)]</field>
+        </record>
+
+        <!-- Événements : accès complet pour le Responsable Événements -->
+        <record id="rule_fiesta_event_manager_all" model="ir.rule">
+            <field name="name">Événement : tous droits pour le Responsable Événements</field>
+            <field name="model_id" ref="model_fiesta_event"/>
+            <field name="groups" eval="[(4, ref('event_manager.group_event_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Invitations : lecture pour l'organisateur et les invités de l'événement -->
+        <record id="rule_fiesta_event_invitation_read_participants" model="ir.rule">
+            <field name="name">Invitation : lecture pour organisateur et invités de l'événement</field>
+            <field name="model_id" ref="model_fiesta_event_invitation"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">['|', ('event_id.contact_id', '=', user.partner_id.id), ('event_id.guest_ids', 'in', [user.partner_id.id])]</field>
+        </record>
+
+        <!-- Invitations : création et suppression par l'organisateur de l'événement -->
+        <record id="rule_fiesta_event_invitation_create_unlink_organizer" model="ir.rule">
+            <field name="name">Invitation : création et suppression par l'organisateur</field>
+            <field name="model_id" ref="model_fiesta_event_invitation"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('event_id.contact_id', '=', user.partner_id.id)]</field>
+        </record>
+
+        <!-- Invitations : modification par l'invité concerné uniquement -->
+        <record id="rule_fiesta_event_invitation_write_guest" model="ir.rule">
+            <field name="name">Invitation : modification par l'invité uniquement</field>
+            <field name="model_id" ref="model_fiesta_event_invitation"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('guest_id', '=', user.partner_id.id)]</field>
+        </record>
+
+        <!-- Invitations : accès complet pour le Responsable Événements -->
+        <record id="rule_fiesta_event_invitation_manager_all" model="ir.rule">
+            <field name="name">Invitation : tous droits pour le Responsable Événements</field>
+            <field name="model_id" ref="model_fiesta_event_invitation"/>
+            <field name="groups" eval="[(4, ref('event_manager.group_event_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

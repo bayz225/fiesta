@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_event_manager_root"
+              name="Gestion des Événements"
+              sequence="10"/>
+
+    <menuitem id="menu_event_manager_events"
+              name="Événements"
+              parent="menu_event_manager_root"
+              sequence="10"
+              />
+
+    <menuitem id="menu_event_config_root"
+              name="Configuration"
+              parent="menu_event_manager_root"
+              sequence="90"
+              groups="event_manager.group_event_manager"
+              />
+</odoo>

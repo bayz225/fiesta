@@ -5,18 +5,6 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <!-- Stat Button -->
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(action_contacted_event_manage)d" context="{'default_guest_id': id}" type="action" class="oe_stat_button" icon="fa-file-text-o" string="Mes invitations"/>
-            </xpath>
-
-            <!-- Header Button -->
-            <xpath expr="//sheet" position="before">
-                <header>
-                    <button name="%(action_add_event)d" string="Créer un événement" type="action" class="btn-primary"/>
-                </header>
-            </xpath>
-
             <!-- Retrait éventuel de l'autofocus natif -->
             <xpath expr="//notebook/page[@name='contact_addresses']" position="attributes">
                 <attribute name="autofocus"></attribute>
@@ -25,14 +13,14 @@
             <!-- Onglet : Mes événements (avec autofocus par défaut) -->
             <xpath expr="//notebook/page[@name='contact_addresses']" position="before">
                 <page string="Mes événements" name="contact_events" autofocus="autofocus">
-                    <field name="events_organized_ids" readonly="1">
-                        <list string="Mes événements" empty="Aucun événement trouvé !" create="false" delete="true" edit="false">
+                    <field name="events_organized_ids">
+                        <list string="Mes événements" empty="Aucun événement trouvé !" create="false" delete="true">
                             <field name="name"/>
                             <field name="date"/>
                             <field name="time" widget="float_time" optional="show"/>
                             <field name="location" optional="show"/>
                             <field name="available_places_char" widget="badge" decoration-success="available_places_int == max_guest" decoration-danger="available_places_int == 0" decoration-warning="available_places_int &lt; max_guest"/>
-                            <button name="%(action_add_contact_to_event_wizard)d" type="action" string="Inviter" icon="fa-address-book" class="oe_highlight"/>
+                            <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'" decoration-muted="state == 'done'" decoration-danger="state == 'cancelled'"/>
                         </list>
                     </field>
                 </page>
@@ -51,8 +39,6 @@
                             <field name="event_location" optional="show"/>
                             <field name="contact_id" widget="many2one_tags_avatar"/>
                             <field name="available_places_char" widget="badge" decoration-success="available_places_int == max_guest" decoration-danger="available_places_int == 0" decoration-warning="available_places_int &lt; max_guest"/>
-
-                            <button name="%(action_add_guest_info_to_event)d" type="action" string="Confirmer ma présence" invisible="is_expired_confirmation" icon="fa-calendar-plus-o" class="oe_highlight" context="{'default_event_id': event_id, 'default_guest_id': parent.id}"/>
                         </list>
                     </field>
                 </page>

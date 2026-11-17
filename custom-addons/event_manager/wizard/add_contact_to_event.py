@@ -1,10 +1,10 @@
-from odoo import api, fields, models, Command, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class AddContactToEventWizard(models.TransientModel):
     _name = "add.contact.to.event.wizard"
-    _description = "Ajouter des invités à un événement (Wizard)"
+    _description = "Assistant d'ajout d'invités à un événement"
 
     event_id = fields.Many2one(
         'fiesta.event',
@@ -30,25 +30,20 @@ class AddContactToEventWizard(models.TransientModel):
                 res['event_id'] = self.env.context['active_id']
         return res
 
-    #filtré les invités existants et l'organisateur de l'événement
-    @api.depends('event_id', 'event_id.invitation_line_ids.guest_id', 'event_id.contact_id')
+    # Filtrer les invités existants, déjà sélectionnés et l'organisateur de l'événement
+    @api.depends('event_id', 'event_id.invitation_line_ids.guest_id', 'event_id.contact_id', 'line_ids.guest_id')
     def _compute_excluded_guest_ids(self):
         for wizard in self:
             if not wizard.event_id:
                 wizard.excluded_guest_ids = self.env['res.partner']
                 continue
 
-            # Contacts déjà invités + organisateur
+            # Contacts déjà invités + organisateur + lignes en cours
             excluded_partners = wizard.event_id.invitation_line_ids.mapped('guest_id')
             if wizard.event_id.contact_id:
                 excluded_partners |= wizard.event_id.contact_id
-                excluded_partners |= wizard.line_ids.mapped('guest_id')
-            
-            #filter les contact qui sont des entreprises
-            is_company = self.env['res.partner'].search([('is_company', '=', True)])
-            for company in is_company:
-                excluded_partners |= company
-            
+            excluded_partners |= wizard.line_ids.mapped('guest_id')
+
             wizard.excluded_guest_ids = excluded_partners
 
     def action_add_contacts(self):
@@ -56,13 +51,13 @@ class AddContactToEventWizard(models.TransientModel):
 
         if not self.line_ids:
             raise ValidationError(
-                _('Veuillez ajouter au moins un invité.')
+                'Veuillez ajouter au moins un invité.'
             )
-        
+
         if self.event_id.available_places_int < len(self.line_ids):
             raise ValidationError(
-                _("Vous ne pouvez pas ajouter (%s) invités. Le nombre de place disponible est de %s.")
-                % (len(self.line_ids), self.event_id.available_places_int)
+                f"Vous ne pouvez pas ajouter ({len(self.line_ids)}) invités. "
+                f"Le nombre de places disponibles est de {self.event_id.available_places_int}."
             )
         
         invitation_vals = [
@@ -82,16 +77,16 @@ class AddContactToEventWizard(models.TransientModel):
 
 class AddContactToEventWizardLine(models.TransientModel):
     _name = "add.contact.to.event.wizard.line"
-    _description = "Ligne d'ajout d'invité dans le wizard"
+    _description = "Ligne d'assistant d'ajout d'invité"
 
     wizard_id = fields.Many2one(
         'add.contact.to.event.wizard',
-        string='Wizard',
+        string='Assistant',
         ondelete='cascade'
     )
     guest_id = fields.Many2one(
         'res.partner',
         string='Invité',
         required=True,
-        domain="[('id', 'not in', parent.excluded_guest_ids)]"
+        domain="[('is_company', '=', False), ('id', 'not in', parent.excluded_guest_ids)]"
     )

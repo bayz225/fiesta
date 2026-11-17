@@ -30,6 +30,7 @@ services:
       - ./requirements.txt:/mnt/requirements.txt:ro
     # command: sh -c "pip config set global.break-system-packages true && pip install -r /mnt/requirements.txt && odoo -c /etc/odoo/odoo.conf -i base"
     command: odoo -c /etc/odoo/odoo.conf --dev xml,qweb
+    # command: ["--", "-d", "odoo_v19_fiesta", "-i", "base"]
 
 volumes:
   odoo_fiesta_web_datas:

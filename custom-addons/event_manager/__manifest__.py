@@ -22,13 +22,14 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'wizard/add_event_view.xml',
+        'security/event_security.xml',
+
         'wizard/add_contact_to_event_view.xml',
         'wizard/add_guest_info_event_view.xml',
+
+        'views/menu.xml',
         'views/event_view.xml',
-        'views/contacted_event_view.xml',
         'views/contact_view.xml',
-        'views/res_partner_views.xml',
         'views/res_partner_dashboard_view.xml',
         'views/res_config_settings_views.xml',
     ],
@@ -45,5 +46,6 @@
     'demo': [
         'demo/demo.xml',
     ],
+    "license": "LGPL-3"
 }
 

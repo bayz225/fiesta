@@ -30,7 +30,7 @@
     </record>
 
     <record id="event_manager_settings_action" model="ir.actions.act_window">
-        <field name="name">Setting</field>
+        <field name="name">Paramètres Événements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
@@ -38,9 +38,9 @@
         <field name="context">{'module': 'event_manager', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="event_manager_settings_menu" 
-        name="Paramètres Événements" 
-        action="event_manager_settings_action" 
-        parent="contacts.res_partner_menu_config" 
-        sequence="100"/>
+    <menuitem id="menu_event_settings_root"
+        name="Paramètres"
+        action="event_manager_settings_action"
+        parent="menu_event_config_root"
+        sequence="10"/>
 </odoo>

@@ -10,45 +10,46 @@ export class EventDashboard extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.action = useService("action");
         this.chartCanvasRef = useRef("chartCanvas");
         this.chartInstance = null;
 
         this.state = useState({
-            allEventsCount: 0,
-            allEventsLastWeekPercentage: 0,
-            upcomingEventsCount: 0,
-            thisMonthEventsPercentage: 0,
-            allEventsFullyCount: 0,
-            allEventsFullyPercentage: 0,
-            chartLabels: [],
-            chartValues: [],
-            maxPeriod: null,
-            minPeriod: null,
-            maxGuestPeriod: null,
-            lastEventsList: [],
+            count_all_events: 0,
+            percentage_of_created_events_last_7_days: 0,
+            count_upcoming_events: 0,
+            count_events_of_this_month: 0,
+            percentage_of_events_this_month: 0,
+            percentage_of_events_fully_booked: 0,
+            chart_labels: [],
+            chart_values: [],
+            max_period: null,
+            min_period: null,
+            max_guest_period: null,
+            list_of_last_created_events: [],
         });
 
         // 1. Précharger la bibliothèque Chart.js avant le rendu du composant
         onWillStart(async () => {
             const result = await this.orm.call(
-                "res.partner",
+                "fiesta.event.dashboard",
                 "get_tiles_data",
                 [],
                 {}
             );
 
-            this.state.allEventsCount = result.all_events_count || 0;
-            this.state.allEventsLastWeekPercentage = result.all_events_last_week_percentage || 0;
-            this.state.upcomingEventsCount = result.upcoming_events_count || 0;
-            this.state.thisMonthEventsPercentage = result.this_month_events_percentage || 0;
-            this.state.thisMonthEventsCount = result.this_month_events_count || 0;
-            this.state.allEventsFullyPercentage = result.all_events_fully_percentage || 0;
-            this.state.chartLabels = result.chart_labels || [];
-            this.state.chartValues = result.chart_values || [];
-            this.state.maxPeriod = result.max_period || null;
-            this.state.minPeriod = result.min_period || null;
-            this.state.maxGuestPeriod = result.max_guest_period || null;
-            this.state.lastEventsList = result.last_events_list || [];
+            this.state.count_all_events = result.count_all_events || 0;
+            this.state.percentage_of_created_events_last_7_days = result.percentage_of_created_events_last_7_days || 0;
+            this.state.count_upcoming_events = result.count_upcoming_events || 0;
+            this.state.count_events_of_this_month = result.count_events_of_this_month || 0;
+            this.state.percentage_of_events_this_month = result.percentage_of_events_this_month || 0;
+            this.state.percentage_of_events_fully_booked = result.percentage_of_events_fully_booked || 0;
+            this.state.chart_labels = result.chart_labels || [];
+            this.state.chart_values = result.chart_values || [];
+            this.state.max_period = result.max_period || null;
+            this.state.min_period = result.min_period || null;
+            this.state.max_guest_period = result.max_guest_period || null;
+            this.state.list_of_last_created_events = result.list_of_last_created_events || [];
             await loadBundle("web.chartjs_lib");
         });
         // 2. Initialiser le graphique une fois le DOM prêt
@@ -61,6 +62,20 @@ export class EventDashboard extends Component {
                 this.chartInstance.destroy();
             }
         })
+    }
+
+    openEvent(eventId) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "fiesta.event",
+            res_id: eventId,
+            views: [[false, "form"]],
+            target: "current",
+        });
+    }
+
+    openAllEvents() {
+        this.action.doAction("event_manager.action_fiesta_event_all");
     }
 
     renderChart() {
@@ -77,12 +92,12 @@ export class EventDashboard extends Component {
             type: "bar",
             data: {
                 // Remplacement par vos variables d'état dynamiques
-                labels: this.state.chartLabels, 
+                labels: this.state.chart_labels, 
                 datasets: [
                     {
                         label: "Événements organisés",
                         // Remplacement par vos variables d'état dynamiques
-                        data: this.state.chartValues, 
+                        data: this.state.chart_values, 
                         backgroundColor: "#cb0c9f", 
                         borderRadius: 4,
                     },

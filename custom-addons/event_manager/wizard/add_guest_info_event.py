@@ -1,9 +1,10 @@
-from odoo import api, fields, models, Command, _
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError, UserError
+
 
 class AddGuestInfoToEventWizard(models.TransientModel):
     _name = "add.guest.info.to.event.wizard"
-    _description = "Ajouter les informations d'arrivés d'un invité (Wizard)"
+    _description = "Assistant d'informations d'arrivée d'un invité"
 
     event_id = fields.Many2one(
         'fiesta.event',
@@ -15,7 +16,8 @@ class AddGuestInfoToEventWizard(models.TransientModel):
         'res.partner',
         string='Invité',
         required=True,
-        readonly=True
+        readonly=True,
+        default=lambda self: self.env.user.partner_id
     )
     arrival_time = fields.Float(
         string="Heure",
@@ -23,69 +25,66 @@ class AddGuestInfoToEventWizard(models.TransientModel):
     number_of_companions = fields.Integer(string='Nombre d\'accompagnants')
 
     @api.model
-    def default_get(self, fields):
-        res = super(AddGuestInfoToEventWizard, self).default_get(fields)
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
 
-        guest_id = self.env.context.get('default_guest_id')
-        event_id = self.env.context.get('default_event_id')
+        event_id = res.get('event_id')
+        guest_id = self.env.user.partner_id.id
 
-        if guest_id and 'guest_id' in fields:
-            res['guest_id'] = guest_id
+        if event_id and guest_id:
+            guest_line = self.env['fiesta.event.invitation'].search([
+                ('event_id', '=', event_id),
+                ('guest_id', '=', guest_id)
+            ], limit=1)
 
-        if event_id and 'event_id' in fields:
-            res['event_id'] = event_id
+            if guest_line:
+                res['arrival_time'] = guest_line.arrival_time
+                res['number_of_companions'] = guest_line.number_of_companions
+            else:
+                event = self.env['fiesta.event'].browse(event_id)
+                res['arrival_time'] = event.time
 
         return res
 
-    @api.onchange('event_id', 'guest_id')
-    def _onchange_guest_info(self):
-        for wizard in self:
-            if wizard.event_id and wizard.guest_id:
-                guest_line = wizard.event_id.invitation_line_ids.filtered(
-                    lambda line: line.guest_id == wizard.guest_id
-                )
-                if guest_line:
-                    is_updated = True if guest_line[0].write_date != guest_line[0].create_date else False
-                    if is_updated:
-                        wizard.arrival_time = guest_line[0].arrival_time
-                        wizard.number_of_companions = guest_line[0].number_of_companions
-                    else:
-                        wizard.arrival_time = wizard.event_id.time
-
     def action_add_guest_info(self):
         self.ensure_one()
-        
-        if self.number_of_companions and self.number_of_companions < 0:
-            raise ValidationError(
-                _("Le nombre d'accompagnants ne peut pas être négatif.")
-            ) 
 
-        exist_line = self.event_id.invitation_line_ids.filtered(
-            lambda line: line.guest_id == self.guest_id
-        )
+        if self.event_id.state != "confirmed":
+            raise UserError("Veuillez attendre la confirmation de l'événement.")
 
-        if not exist_line and self.number_of_companions > self.event_id.available_places_int:
-            raise ValidationError(
-                _("Vous ne pouvez pas ajouter (%s) compagnons. Le nombre de place disponible est de %s.")
-                % (self.number_of_companions, self.event_id.available_places_int)
-            )
+        if self.number_of_companions < 0:
+            raise ValidationError("Le nombre d'accompagnants ne peut pas être négatif.")
 
-        if exist_line:
-            new_available_places = self.event_id.available_places_int + exist_line.number_of_companions
+        exist_line = self.env['fiesta.event.invitation'].search([
+            ('event_id', '=', self.event_id.id),
+            ('guest_id', '=', self.guest_id.id)
+        ], limit=1)
 
-            if new_available_places < self.number_of_companions:
+        if not exist_line:
+            # Vérification à la création
+            total_requested = 1 + self.number_of_companions
+            if total_requested > self.event_id.available_places_int:
                 raise ValidationError(
-                    _("Vous ne pouvez pas modifier le nombre de compagnons à (%s). Le nombre de place disponible est de %s.")
-                    % (self.number_of_companions, new_available_places)
+                    f"Vous ne pouvez pas ajouter ({total_requested}) participant(s). "
+                    f"Il ne reste que {self.event_id.available_places_int} place(s)."
                 )
-            exist_line.write({
+            
+            self.env['fiesta.event.invitation'].create({
+                'event_id': self.event_id.id,
+                'guest_id': self.guest_id.id,
                 'arrival_time': self.arrival_time,
                 'number_of_companions': self.number_of_companions,
             })
         else:
-            self.env['fiesta.event.invitation'].create({
-                'event_id': self.event_id.id,
-                'guest_id': self.guest_id.id,
+            # Vérification à la modification
+            new_available_places = self.event_id.available_places_int + exist_line.number_of_companions
+            if new_available_places < self.number_of_companions:
+                raise ValidationError(
+                    f"Vous ne pouvez pas modifier le nombre d'accompagnants à ({self.number_of_companions}). "
+                    f"Il ne reste que {new_available_places} place(s)."
+                )
+                
+            exist_line.write({
                 'arrival_time': self.arrival_time,
                 'number_of_companions': self.number_of_companions,
             })
