@@ -5,9 +5,11 @@
         <field name="tag">event_dashboard_tag</field>
     </record>
 
-    <menuitem id="menu_custom_contacts_item"
+    <menuitem id="menu_event_dashboard_root"
             name="Tableau de bord"
-            parent="contacts.menu_contacts"
+            parent="menu_event_manager_root"
             action="res_partner_event_dashbord_action"
-            sequence="50"/>
+            sequence="20"
+            groups="event_manager.group_event_manager"
+        />
 </odoo>

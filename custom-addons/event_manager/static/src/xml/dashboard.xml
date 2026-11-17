@@ -4,7 +4,12 @@
         <!-- Conteneur principal -->
         <main class="main-content mt-1 border-radius-lg my-custom-dashboard">
             <div class="container-fluid py-4">
-                <h2 class="mb-3 fs-4">Tableau de bord</h2>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0 fs-4">Tableau de bord</h2>
+                    <button type="button" class="btn btn-primary btn-sm" t-on-click="() => this.openAllEvents()">
+                        Voir tous les événements
+                    </button>
+                </div>
                 <!-- Ligne 1 : Cartes de Statistiques -->
                 <div class="row">
                     <!-- Carte 1 -->
@@ -16,10 +21,10 @@
                                         <div class="numbers">
                                             <p class="mb-0 font-weight-bold">Événements enregistrés</p>
                                             <h5 class="font-weight-bolder mb-0">
-                                                <span t-esc="state.allEventsCount"/>
-                                                <span t-attf-class="text-sm font-weight-bolder ml-1 {{ state.allEventsLastWeekPercentage &gt;= 0 ? 'text-success' : 'text-danger'}}">
-                                                    <t t-if="state.allEventsLastWeekPercentage &gt; 0">+</t>
-                                                    <span t-esc="state.allEventsLastWeekPercentage"/>
+                                                <span t-esc="state.count_all_events"/>
+                                                <span t-attf-class="text-sm font-weight-bolder ml-1 {{ state.percentage_of_created_events_last_7_days &gt;= 0 ? 'text-success' : 'text-danger'}}">
+                                                    <t t-if="state.percentage_of_created_events_last_7_days &gt; 0">+</t>
+                                                    <span t-esc="state.percentage_of_created_events_last_7_days"/>
 %
                                                 </span>
                                             </h5>
@@ -46,10 +51,10 @@
                                         <div class="numbers">
                                             <p class="mb-0 font-weight-bold">Événements de ce mois</p>
                                             <h5 class="font-weight-bolder mb-0">
-                                                <span t-esc="state.thisMonthEventsCount"/>
-                                                <span t-attf-class="text-sm font-weight-bolder ml-2 {{state.thisMonthEventsPercentage &gt;= 0 ? 'text-success' : 'text-danger'}}">
-                                                    <t t-if="state.thisMonthEventsPercentage &gt; 0">+</t>
-                                                    <span t-esc="state.thisMonthEventsPercentage"/>
+                                                <span t-esc="state.count_events_of_this_month"/>
+                                                <span t-attf-class="text-sm font-weight-bolder ml-2 {{state.percentage_of_events_this_month &gt;= 0 ? 'text-success' : 'text-danger'}}">
+                                                    <t t-if="state.percentage_of_events_this_month &gt; 0">+</t>
+                                                    <span t-esc="state.percentage_of_events_this_month"/>
 %
                                                 </span>
                                             </h5>
@@ -75,8 +80,8 @@
                                     <div class="col-8">
                                         <div class="numbers">
                                             <p class="mb-0 font-weight-bold">Événements à venir</p>
-                                            <h5 t-attf-class="font-weight-bolder mb-0 {{state.upcomingEventsCount &lt; 0 ? 'text-danger' : ''}}">
-                                                <span t-esc="state.upcomingEventsCount"/>
+                                            <h5 t-attf-class="font-weight-bolder mb-0 {{state.count_upcoming_events &lt; 0 ? 'text-danger' : ''}}">
+                                                <span t-esc="state.count_upcoming_events"/>
                                             </h5>
                                         </div>
                                     </div>
@@ -100,9 +105,9 @@
                                     <div class="col-8">
                                         <div class="numbers">
                                             <p class="mb-0 font-weight-bold">Taux de remplissage</p>
-                                            <h5 t-attf-class="font-weight-bolder mb-0 {{state.allEventsFullyPercentage &lt;= 0 ? 'text-danger' : ''}}">
-                                                <t t-if="state.allEventsFullyPercentage &gt; 0">+</t>
-                                                <span t-esc="state.allEventsFullyPercentage"/>
+                                            <h5 t-attf-class="font-weight-bolder mb-0 {{state.percentage_of_events_fully_booked &lt;= 0 ? 'text-danger' : ''}}">
+                                                <t t-if="state.percentage_of_events_fully_booked &gt; 0">+</t>
+                                                <span t-esc="state.percentage_of_events_fully_booked"/>
 %
                                             </h5>
                                         </div>
@@ -141,9 +146,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-if="state.lastEventsList.length">
-                                            <t t-foreach="state.lastEventsList" t-as="event" t-key="event.id">
-                                                <tr>
+                                        <t t-if="state.list_of_last_created_events.length">
+                                            <t t-foreach="state.list_of_last_created_events" t-as="event" t-key="event.id">
+                                                <tr t-on-click="() => this.openEvent(event.id)" style="cursor: pointer;">
                                                     <td>
                                                         <span class="text-xs px-2 font-weight-bold mb-0" t-esc="event.name"/>
                                                     </td>
@@ -251,11 +256,11 @@
                                         </p>
 
                                         <h6 class="mb-0 mt-1 text-xs text-uppercase text-success font-weight-bold">
-                                            <t t-esc="state.maxGuestPeriod['label']"/>
+                                            <t t-esc="state.max_guest_period['label']"/>
                                         </h6>
 
                                         <p class="text-xs text-secondary mb-0">
-                                            <t t-esc="state.maxGuestPeriod['guest_count']"/>
+                                            <t t-esc="state.max_guest_period['guest_count']"/>
  invités
                                         </p>
 
@@ -283,12 +288,12 @@
                                         </p>
 
                                         <h6 class="mb-0">
-                                            <t t-esc="state.maxPeriod['count']"/>
+                                            <t t-esc="state.max_period['count']"/>
  événements
                                         </h6>
 
                                         <p class="text-xs text-secondary mb-0">
-                                            <t t-esc="state.maxPeriod['label']"/>
+                                            <t t-esc="state.max_period['label']"/>
                                         </p>
 
                                     </div>
@@ -315,12 +320,12 @@
                                         </p>
 
                                         <h6 class="mb-0">
-                                            <t t-esc="state.minPeriod['count']"/>
+                                            <t t-esc="state.min_period['count']"/>
  événements
                                         </h6>
 
                                         <p class="text-xs text-secondary mb-0">
-                                            <t t-esc="state.minPeriod['label']"/>
+                                            <t t-esc="state.min_period['label']"/>
                                         </p>
 
                                     </div>
