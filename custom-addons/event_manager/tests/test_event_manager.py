@@ -22,6 +22,12 @@ class TestEventManager(TransactionCase):
             'email': 'other@example.com',
             'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
+        cls.manager_user = cls.env['res.users'].create({
+            'name': 'Responsable Test',
+            'login': 'manager_user_test',
+            'email': 'manager@example.com',
+            'group_ids': [(6, 0, [cls.env.ref('event_manager.group_event_manager').id])],
+        })
         cls.organizer = cls.organizer_user.partner_id
         cls.guest_1 = cls.env['res.partner'].create({'name': 'Invité 1'})
         cls.guest_2 = cls.env['res.partner'].create({'name': 'Invité 2'})
@@ -120,19 +126,127 @@ class TestEventManager(TransactionCase):
     def test_event_record_rules(self):
         event = self._create_event()
 
-        # Un autre utilisateur interne peut lire mais pas modifier ni supprimer
+        # Un tiers non invité ne peut ni lire, ni modifier, ni supprimer l'événement
+        self.env.invalidate_all()
         event_as_other = event.with_user(self.other_user)
+        with self.assertRaises(AccessError):
+            _ = event_as_other.name
+        with self.assertRaises(AccessError):
+            event_as_other.write({'name': 'Modifié'})
+        with self.assertRaises(AccessError):
+            event_as_other.unlink()
+
+        # Un utilisateur interne ne peut pas créer un événement pour quelqu'un d'autre
+        with self.assertRaises(AccessError):
+            self.env['fiesta.event'].with_user(self.other_user).create({
+                'name': 'Événement pour autrui',
+                'contact_id': self.organizer.id,
+                'date': self.future_date,
+                'time': 20.0,
+                'location': 'Abidjan',
+                'max_guest': 5,
+            })
+
+        # Un utilisateur interne peut créer un événement pour lui-même
+        own_event = self.env['fiesta.event'].with_user(self.other_user).create({
+            'name': 'Mon événement',
+            'contact_id': self.other_user.partner_id.id,
+            'date': self.future_date,
+            'time': 20.0,
+            'location': 'Abidjan',
+            'max_guest': 5,
+        })
+        self.assertEqual(own_event.name, 'Mon événement')
+        own_event.unlink()
+
+        # Une fois invité, other_user peut lire l'événement mais pas le modifier ni le supprimer
+        self.env['fiesta.event.invitation'].create({
+            'event_id': event.id,
+            'guest_id': self.other_user.partner_id.id,
+        })
         self.assertEqual(event_as_other.name, 'Soirée Fiesta')
         with self.assertRaises(AccessError):
             event_as_other.write({'name': 'Modifié'})
         with self.assertRaises(AccessError):
             event_as_other.unlink()
 
-        # L'organisateur peut modifier et supprimer
+        # Un Responsable Événements peut créer pour autrui et modifier tout événement
+        mgr_event = self.env['fiesta.event'].with_user(self.manager_user).create({
+            'name': 'Créé par Manager',
+            'contact_id': self.organizer.id,
+            'date': self.future_date,
+            'time': 20.0,
+            'location': 'Abidjan',
+            'max_guest': 5,
+        })
+        mgr_event.unlink()
+        event_as_manager = event.with_user(self.manager_user)
+        event_as_manager.write({'name': 'Modifié par Responsable'})
+        self.assertEqual(event.name, 'Modifié par Responsable')
+
+        # L'organisateur peut lire, modifier et supprimer
         event_as_org = event.with_user(self.organizer_user)
+        self.assertEqual(event_as_org.name, 'Modifié par Responsable')
         event_as_org.write({'name': 'Soirée Mise à Jour'})
         self.assertEqual(event.name, 'Soirée Mise à Jour')
         event_as_org.unlink()
+
+    def test_invitation_record_rules_and_state_workflow(self):
+        event = self._create_event()
+        self.assertEqual(event.state, 'draft')
+
+        event.with_user(self.organizer_user).action_confirm()
+        self.assertEqual(event.state, 'confirmed')
+
+        inv = self.env['fiesta.event.invitation'].with_user(self.organizer_user).create({
+            'event_id': event.id,
+            'guest_id': self.other_user.partner_id.id,
+        })
+        inv_guest1 = self.env['fiesta.event.invitation'].with_user(self.organizer_user).create({
+            'event_id': event.id,
+            'guest_id': self.guest_1.id,
+        })
+
+        # Un tiers (ni organisateur ni invité) ne peut pas lire/modifier/supprimer l'invitation
+        third_user = self.env['res.users'].create({
+            'name': 'Tiers Test',
+            'login': 'third_user_test',
+            'email': 'third@example.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        self.env.invalidate_all()
+        with self.assertRaises(AccessError):
+            _ = inv.with_user(third_user).number_of_companions
+        with self.assertRaises(AccessError):
+            inv.with_user(third_user).write({'number_of_companions': 1})
+        with self.assertRaises(AccessError):
+            inv.with_user(third_user).unlink()
+
+        # L'invité peut consulter la liste des invités mais pas modifier/supprimer celle d'un autre
+        self.assertEqual(inv_guest1.with_user(self.other_user).guest_id, self.guest_1)
+        with self.assertRaises(AccessError):
+            inv_guest1.with_user(self.other_user).write({'number_of_companions': 1})
+        with self.assertRaises(AccessError):
+            inv.with_user(self.other_user).unlink()
+
+        # L'invité peut modifier sa propre invitation
+        inv.with_user(self.other_user).write({'number_of_companions': 1})
+        self.assertEqual(inv.number_of_companions, 1)
+
+        # L'organisateur peut supprimer une invitation
+        inv_guest1.with_user(self.organizer_user).unlink()
+
+        # Annulation bloque de nouvelles invitations
+        event.with_user(self.organizer_user).action_cancel()
+        self.assertEqual(event.state, 'cancelled')
+        with self.assertRaises(ValidationError):
+            self.env['fiesta.event.invitation'].create({
+                'event_id': event.id,
+                'guest_id': self.guest_1.id,
+            })
+
+        event.with_user(self.organizer_user).action_reset_draft()
+        self.assertEqual(event.state, 'draft')
 
     def test_tiles_data_empty_and_event_list(self):
         # Aucun événement existant : pas de ZeroDivisionError

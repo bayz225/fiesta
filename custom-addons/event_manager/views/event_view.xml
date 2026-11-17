@@ -24,6 +24,19 @@
         </field>
     </record>
 
+    <!-- Copie de la vue Liste pour "Mes invitations" -->
+    <record id="view_fiesta_event_invited_list" model="ir.ui.view">
+        <field name="name">fiesta.event.invited.list</field>
+        <field name="model">fiesta.event</field>
+        <field name="inherit_id" ref="event_manager.view_fiesta_event_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="create">0</attribute>
+            </list>
+        </field>
+    </record>
+
     <!-- Vue Calendrier -->
     <record id="view_fiesta_event_calendar" model="ir.ui.view">
         <field name="name">fiesta.event.calendar</field>
@@ -48,6 +61,7 @@
                 <field name="contact_id"/>
                 <field name="location"/>
                 <filter string="Mes événements" name="my_events" domain="[('contact_id.user_ids', 'in', [uid])]"/>
+                <filter string="Invité à des événements" name="invited_to_event" domain="[('guest_ids.user_ids', 'in', [uid])]"/>
                 <separator/>
                 <filter string="À venir" name="upcoming" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter string="Confirmés" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
@@ -69,41 +83,88 @@
             <form string="Mon événement">
                 <field name="is_done" invisible="1"/>
                 <field name="can_add_guest" invisible="1"/>
+
+                <field name="is_owner" invisible="1"/>
+                <field name="is_manager" invisible="1"/>
+
                 <header>
-                    <button name="action_confirm" type="object" string="Confirmer" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="%(action_add_contact_to_event_wizard)d" type="action" string="Inviter des contacts" class="btn-secondary" invisible="state in ('cancelled', 'done') or not can_add_guest"/>
-                    <button name="action_done" type="object" string="Terminer" invisible="state != 'confirmed' or not is_done"/>
-                    <button name="action_cancel" type="object" string="Annuler" invisible="state in ('cancelled', 'done')"/>
-                    <button name="action_reset_draft" type="object" string="Remettre en brouillon" invisible="state != 'cancelled'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                    <button 
+                        name="action_confirm" 
+                        type="object" 
+                        string="Confirmer" 
+                        class="btn-primary" 
+                        invisible="(not is_manager and not is_owner) or (state != 'draft')"
+                    />
+                    <button name="%(action_add_contact_to_event_wizard)d" type="action" 
+                        string="Inviter des contacts" 
+                        class="btn-secondary" 
+                        invisible="(not is_manager and not is_owner) or state in ('cancelled', 'done') or not can_add_guest"
+                    />
+                    <button name="action_done" type="object" 
+                        string="Terminer" 
+                        invisible="(not is_manager and not is_owner) or state != 'confirmed' or not is_done"
+                    />
+                    <button name="action_cancel" type="object" 
+                        string="Annuler" 
+                        invisible="(not is_manager and not is_owner) or state in ('cancelled', 'done')"
+                    />
+                    <button name="action_reset_draft" type="object" 
+                        string="Remettre en brouillon" 
+                        invisible="(not is_manager and not is_owner) or state != 'cancelled'"
+                    />
+                    <field name="state" widget="statusbar" 
+                        statusbar_visible="draft,confirmed,done"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Nom de l'événement"/>
+                            <field name="name" 
+                                placeholder="Nom de l'événement"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'"
+                            />
                         </h1>
                         <p>
                             <label for="description" string="Description"/>
-                            <field name="description" placeholder="Entrez la description de l'événement"/>
+                            <field name="description" 
+                                placeholder="Entrez la description de l'événement"
+                                readonly="(not is_manager and not is_owner) or state not in ('draft', 'confirmed')"
+                            />
                         </p>
                     </div>
                     <group>
                         <group>
-                            <field name="contact_id" widget="many2one_avatar"/>
-                            <field name="date"/>
-                            <field name="time" widget="float_time"/>
-                            <field name="location"/>
+                            <field name="contact_id" 
+                                widget="many2one_avatar"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'"
+                            />
+                            <field name="date"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'"                
+                            />
+                            <field name="time" 
+                                widget="float_time"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'" 
+                            />
+                            <field name="location"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'" 
+                            />
                         </group>
                         <group>
-                            <field name="party_theme" widget="color_picker"/>
-                            <field name="max_guest"/>
-                            <field name="available_places_char" readonly="1"/>
+                            <field name="party_theme" 
+                                widget="color_picker"
+                                readonly="(not is_manager and not is_owner) or state != 'draft'" 
+                            />
+                            <field name="max_guest"
+                                readonly="(not is_manager and not is_owner) or state not in ('draft', 'confirmed')" 
+                            />
+                            <field name="available_places_char" 
+                                readonly="1"
+                            />
                         </group>
                     </group>
                     <notebook>
                         <page string="Invités" name="guest_tab">
                             <field name="invitation_line_ids">
-                                <list create="false" delete="true" edit="true" no_open="1">
+                                <list create="false" delete="true" edit="false" no_open="1">
                                     <field name="guest_id" widget="many2one_avatar" readonly="1"/>
                                     <field name="arrival_time" widget="float_time" placeholder="--:--"/>
                                     <field name="number_of_companions"/>
@@ -113,6 +174,19 @@
                     </notebook>
                 </sheet>
                 <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Copie de la vue Formulaire pour "Mes invitations" -->
+    <record id="view_fiesta_event_invited_form" model="ir.ui.view">
+        <field name="name">fiesta.event.invited.form</field>
+        <field name="model">fiesta.event</field>
+        <field name="inherit_id" ref="event_manager.view_fiesta_event_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="create">0</attribute>
             </form>
         </field>
     </record>
@@ -130,6 +204,21 @@
         </field>
     </record>
 
+    <!-- Liaison explicite pour "Tous les événements" -->
+    <record id="action_fiesta_event_all_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_fiesta_event_list"/>
+        <field name="act_window_id" ref="action_fiesta_event_all"/>
+    </record>
+
+    <record id="action_fiesta_event_all_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_fiesta_event_form"/>
+        <field name="act_window_id" ref="action_fiesta_event_all"/>
+    </record>
+
     <record id="action_fiesta_event_mine" model="ir.actions.act_window">
         <field name="name">Mes événements</field>
         <field name="type">ir.actions.act_window</field>
@@ -143,11 +232,57 @@
         </field>
     </record>
 
+    <!-- Liaison explicite de la vue Liste standard (avec bouton Créer) pour "Mes événements" -->
+    <record id="action_fiesta_event_mine_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_fiesta_event_list"/>
+        <field name="act_window_id" ref="action_fiesta_event_mine"/>
+    </record>
+
+    <!-- Liaison explicite de la vue Formulaire standard pour "Mes événements" -->
+    <record id="action_fiesta_event_mine_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_fiesta_event_form"/>
+        <field name="act_window_id" ref="action_fiesta_event_mine"/>
+    </record>
+
+    <record id="action_fiesta_event_invited" model="ir.actions.act_window">
+        <field name="name">Mes invitations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">fiesta.event</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="domain">[('guest_ids.user_ids', 'in', [uid])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Vous n'êtes invité à aucun événement pour le moment.
+            </p>
+        </field>
+    </record>
+
+    <!-- Liaison de la vue Liste -->
+    <record id="action_fiesta_event_invited_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_fiesta_event_invited_list"/>
+        <field name="act_window_id" ref="action_fiesta_event_invited"/>
+    </record>
+
+    <!-- Liaison de la vue Formulaire -->
+    <record id="action_fiesta_event_invited_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_fiesta_event_invited_form"/>
+        <field name="act_window_id" ref="action_fiesta_event_invited"/>
+    </record>
+
     <!-- Menus Événements -->
     <menuitem id="menu_event_all"
               name="Tous les événements"
               parent="menu_event_manager_events"
               action="action_fiesta_event_all"
+              groups="event_manager.group_event_manager"
               sequence="10"/>
 
     <menuitem id="menu_event_mine"
@@ -155,4 +290,10 @@
               parent="menu_event_manager_events"
               action="action_fiesta_event_mine"
               sequence="20"/>
+
+    <menuitem id="menu_event_invited"
+              name="Mes invitations"
+              parent="menu_event_manager_events"
+              action="action_fiesta_event_invited"
+              sequence="30"/>
 </odoo>

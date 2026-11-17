@@ -70,6 +70,16 @@ class FiestaEvent(models.Model):
         string='Peut ajouter des invités',
         compute='_compute_can_add_guest',
     )
+    
+
+    is_owner = fields.Boolean(
+        string='Est propriétaire',
+        compute='_compute_is_owner',
+    )
+    is_manager = fields.Boolean(
+        string='Est manager',
+        compute='_compute_is_manager',
+    )
 
     @api.constrains('date', 'time')
     def _check_event_date(self):
@@ -133,9 +143,21 @@ class FiestaEvent(models.Model):
             else:
                 event.can_add_guest = False
 
+    @api.depends('contact_id')
+    def _compute_is_owner(self):
+        for event in self:
+            event.is_owner = event.contact_id == self.env.user.partner_id 
+
+    @api.depends('contact_id')
+    def _compute_is_manager(self):
+        for event in self:
+            event.is_manager = self.env.user.has_group('event_manager.group_event_manager')
+
     def action_confirm(self):
         today = fields.Date.today()
         for event in self:
+            if not event.is_owner and not event.is_manager:
+                raise ValidationError("Vous n'avez pas le droit de confirmer cet événement.")
             if event.date < today:
                 raise ValidationError("L'événement ne peut plus être confirmé car sa date est dépassée.")
             if event.state != 'draft':
@@ -146,6 +168,8 @@ class FiestaEvent(models.Model):
     def action_done(self):
         today = fields.Date.today()
         for event in self:
+            if not event.is_owner and not event.is_manager:
+                raise ValidationError("Vous n'avez pas le droit de terminer cet événement.")
             if event.state != 'confirmed':
                 raise ValidationError("L'événement doit être à l'état 'Confirmé' pour être terminé.")
             if event.date > today:
@@ -156,6 +180,8 @@ class FiestaEvent(models.Model):
     def action_cancel(self):
         today = fields.Date.today()
         for event in self:
+            if not event.is_owner and not event.is_manager:
+                raise ValidationError("Vous n'avez pas le droit d'annuler cet événement.")
             if event.date < today:
                 raise ValidationError("L'événement ne peut pas être annulé.")
             if event.state == 'done' or event.state == 'cancelled':
@@ -165,6 +191,8 @@ class FiestaEvent(models.Model):
 
     def action_reset_draft(self):
         for event in self:
+            if not event.is_owner and not event.is_manager:
+                raise ValidationError("Vous n'avez pas le droit de réinitialiser cet événement.")
             if event.state != "cancelled":
                 raise ValidationError("L'événement doit être à l'état 'Annulé' pour être réinitialisé.")
         
