@@ -1,37 +1,44 @@
 # Fiesta — gestion d’événements avec Odoo
 
-Fiesta est un environnement Odoo 19 conteneurisé, accompagné du module personnalisé [`event_manager`](custom-addons/event_manager/README.md). Il permet de créer des événements depuis les contacts, de gérer les invitations et de suivre les capacités et les confirmations.
+Fiesta est un environnement Odoo 19 conteneurisé, accompagné du module personnalisé [`event_manager`](custom-addons/event_manager/__manifest__.py). Il permet d’organiser des événements depuis les fiches contacts, de gérer les invitations, de suivre les capacités et confirmations, et de visualiser l’activité sur un tableau de bord dédié.
+
+## Aperçu
+
+Les captures d’écran et illustrations du projet sont stockées dans [`docs/screenshots/`](docs/screenshots/).
+
+![Tableau de bord des événements](docs/screenshots/dashboard.png)
+![Liste des événement](docs/screenshots/event_list.png)
+![Fiche événement et invitations](docs/screenshots/event_form.png)
+![Fiche contact avec leurs événements et invitations](docs/screenshots/contact_form.png)
+
 
 ## Fonctionnalités
 
-- Création et gestion des événements : organisateur, date, heure, lieu, thème et capacité.
-- Invitations liées aux contacts Odoo, avec contrôle des doublons et des places disponibles.
-- Déclaration de l’heure d’arrivée et du nombre d’accompagnants.
-- Accès aux événements organisés et aux invitations reçues depuis les fiches contact.
-- Tableau de bord et réglages du délai de confirmation et de la marge horaire.
+- **Gestion des événements (`fiesta.event`)** : organisateur, date, heure, lieu, thème, capacité maximale (`>= 4`), suivi des messages (`mail.thread`) et cycle de vie (`Brouillon` → `Confirmé` → `Terminé` / `Annulé`).
+- **Gestion des invitations (`fiesta.event.invitation`)** : contrôle d’unicité par événement et contact, vérification des places disponibles, déclaration de l’heure d’arrivée et du nombre d’accompagnants.
+- **Assistants dédiés** : ajout en lot de contacts non encore invités (`add.contact.to.event.wizard`) et saisie des informations d’arrivée d’un invité (`add.guest.info.to.event.wizard`).
+- **Intégration Contacts (`res.partner`)** : accès aux événements organisés et aux invitations reçues directement depuis la fiche contact.
+- **Tableau de bord OWL (`fiesta.event.dashboard`)** : indicateurs clés, évolution mensuelle sur 6 mois et liste des 10 derniers événements créés.
+- **Réglages & sécurité** : paramétrage du délai limite de confirmation (`event_manager.confirmation_days`, 5 jours par défaut) et de la marge d’heure d’arrivée (`event_manager.arrival_time_buffer`, 2 heures par défaut) ; droits cloisonnés entre utilisateurs internes (organisateurs / invités) et responsables événements (`event_manager.group_event_manager`).
 
 ## Technologies
 
 - Odoo 19 (version déclarée par le module)
 - PostgreSQL (version sélectionnée par configuration)
 - Docker Compose
-- Python, XML, JavaScript et SCSS pour le module Odoo
+- Python, XML, JavaScript (OWL) et SCSS pour le module Odoo
 
 ## Structure du dépôt
 
 ```text
 .
 ├── compose.yaml
+├── docs/
+│   └── screenshots/
 ├── odooconf/
 │   └── odoo.conf
 ├── custom-addons/
 │   └── event_manager/
-│       ├── models/
-│       ├── views/
-│       ├── wizard/
-│       ├── security/
-│       ├── static/
-│       └── __manifest__.py
 ├── requirements.txt
 └── README.md
 ```
@@ -69,7 +76,7 @@ Fiesta est un environnement Odoo 19 conteneurisé, accompagné du module personn
    docker compose ps
    ```
 
-3. Ouvrez [http://localhost:8069](http://localhost:8069) (ou le port choisi avec `ODOO_PORT`) et créez une base de données Odoo. Notez son nom : les commandes de mise à jour ci-dessous doivent cibler cette base.
+3. Ouvrez [http://localhost:8069](http://localhost:8069) (ou le port choisi avec `ODOO_PORT`) et créez une base de données Odoo. Notez son nom : les commandes ci-dessous doivent cibler cette base.
 
 4. Dans Odoo, activez le mode développeur, mettez à jour la liste des applications, recherchez **Event Manager** et installez l’application.
 
@@ -98,13 +105,17 @@ docker compose restart odoo
 
 Vous pouvez aussi mettre à jour le module depuis l’interface des applications Odoo.
 
-## Documentation du module
+## Tests
 
-La documentation fonctionnelle et technique du module, incluant ses modèles, ses assistants et ses règles de configuration, se trouve dans [`custom-addons/event_manager/README.md`](custom-addons/event_manager/README.md).
+Pour exécuter la suite de tests unitaires du module [`test_event_manager.py`](custom-addons/event_manager/tests/test_event_manager.py) :
+
+```powershell
+docker compose exec odoo odoo -c /etc/odoo/odoo.conf -d ma_base_odoo -u event_manager --test-tags /event_manager --stop-after-init
+```
 
 ## Sécurité avant publication
 
 - Le fichier `.env` contient la configuration locale et des identifiants : ne le commitez pas.
 - Changez également `admin_passwd` dans [`odooconf/odoo.conf`](odooconf/odoo.conf) avant d’exposer l’instance ; coordonnez tout changement d’identifiants PostgreSQL avec la configuration Odoo.
 - Évitez les identifiants par défaut en dehors d’un environnement local isolé.
-- Le module accorde des droits CRUD étendus aux utilisateurs internes ; vérifiez les droits et règles d’accès nécessaires avant un déploiement partagé ou en production.
+- Le module accorde des droits de modèle larges dans [`ir.model.access.csv`](custom-addons/event_manager/security/ir.model.access.csv) encadrés par des règles d’enregistrement dans [`event_security.xml`](custom-addons/event_manager/security/event_security.xml) ; vérifiez les droits nécessaires avant un déploiement en production.

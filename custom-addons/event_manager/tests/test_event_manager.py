@@ -64,6 +64,9 @@ class TestEventManager(TransactionCase):
             self._create_event(max_guest=3)
 
     def test_invitation_capacity_and_duplicates(self):
+        from psycopg2.errors import UniqueViolation
+        from odoo.tools import mute_logger
+
         event = self._create_event(max_guest=4)
         inv = self.env['fiesta.event.invitation'].create({
             'event_id': event.id,
@@ -73,12 +76,13 @@ class TestEventManager(TransactionCase):
         self.assertEqual(event.total_guest, 3)
         self.assertEqual(event.available_places_int, 1)
 
-        # Doublon interdit
-        with self.assertRaises(ValidationError):
+        # Doublon interdit (Isolé dans un savepoint !)
+        with mute_logger('odoo.sql_db'), self.env.cr.savepoint(), self.assertRaises(UniqueViolation):
             self.env['fiesta.event.invitation'].create({
                 'event_id': event.id,
                 'guest_id': self.guest_1.id,
             })
+            self.env.flush_all() # Force l'envoi de l'ordre INSERT à PostgreSQL
 
         # Dépassement de capacité interdit
         with self.assertRaises(ValidationError):
@@ -94,6 +98,10 @@ class TestEventManager(TransactionCase):
 
         # Rapprocher la date de l'événement dans la fenêtre de 5 jours
         event.write({'date': fields.Date.today() + timedelta(days=2)})
+
+        # Forcer le recalcul du champ compute
+        inv.invalidate_recordset(['is_expired_confirmation'])
+
         self.assertTrue(inv.is_expired_confirmation)
 
         # La modification des informations est bloquée
@@ -159,11 +167,16 @@ class TestEventManager(TransactionCase):
         self.assertEqual(own_event.name, 'Mon événement')
         own_event.unlink()
 
-        # Une fois invité, other_user peut lire l'événement mais pas le modifier ni le supprimer
+        # Tant que l'événement est en brouillon, un invité ne peut pas encore le lire
         self.env['fiesta.event.invitation'].create({
             'event_id': event.id,
             'guest_id': self.other_user.partner_id.id,
         })
+        with self.assertRaises(AccessError):
+            _ = event_as_other.name
+
+        # Une fois l'événement confirmé, l'invité peut le lire mais pas le modifier ni le supprimer
+        event.with_user(self.organizer_user).action_confirm()
         self.assertEqual(event_as_other.name, 'Soirée Fiesta')
         with self.assertRaises(AccessError):
             event_as_other.write({'name': 'Modifié'})
@@ -248,34 +261,26 @@ class TestEventManager(TransactionCase):
         event.with_user(self.organizer_user).action_reset_draft()
         self.assertEqual(event.state, 'draft')
 
-    def test_tiles_data_empty_and_event_list(self):
+    def test_dashboard_empty_and_partner_event_list(self):
         # Aucun événement existant : pas de ZeroDivisionError
         self.env['fiesta.event'].search([]).unlink()
-        data = self.env['res.partner'].get_tiles_data()
-        self.assertEqual(data['all_events_count'], 0)
-        self.assertEqual(data['all_events_last_week_percentage'], 0.0)
-        self.assertEqual(data['all_events_fully_percentage'], 0.0)
+        data = self.env['fiesta.event.dashboard'].get_tiles_data()
+        self.assertEqual(data['count_all_events'], 0)
+        self.assertEqual(data['percentage_of_created_events_last_7_days'], 0.0)
+        self.assertEqual(data['percentage_of_events_fully_booked'], 0.0)
 
-        # event_list inclut les événements organisés ET les invitations
+        # event_list inclut les événements organisés ET les invitations reçues
         event_org = self._create_event()
         self.assertIn(event_org, self.organizer.event_list)
+        self.env['fiesta.event.invitation'].create({
+            'event_id': event_org.id,
+            'guest_id': self.guest_1.id,
+        })
+        self.assertIn(event_org, self.guest_1.event_list)
 
     def test_wizards(self):
-        # Wizard création d'événement
-        add_wiz = self.env['add.event.wizard'].with_context(
-            active_model='res.partner',
-            active_id=self.organizer.id,
-        ).create({
-            'name': 'Événement Wizard',
-            'date': self.future_date,
-            'time': 19.0,
-            'location': 'Plateau',
-            'party_theme': 2,
-            'max_guest': 4,
-        })
-        add_wiz.action_add_event()
-        event = self.env['fiesta.event'].search([('name', '=', 'Événement Wizard')], limit=1)
-        self.assertTrue(event)
+        event = self._create_event(time=19.0, max_guest=4)
+        event.with_user(self.organizer_user).action_confirm()
 
         # Wizard ajout de contacts
         contact_wiz = self.env['add.contact.to.event.wizard'].create({
@@ -294,3 +299,34 @@ class TestEventManager(TransactionCase):
         })
         with self.assertRaises(ValidationError):
             guest_wiz.action_add_guest_info()
+
+        # Wizard info invité : 1 invité + 1 accompagnant = 2 -> autorisé
+        guest_wiz_ok = self.env['add.guest.info.to.event.wizard'].create({
+            'event_id': event.id,
+            'guest_id': self.guest_2.id,
+            'arrival_time': 19.5,
+            'number_of_companions': 1,
+        })
+        guest_wiz_ok.action_add_guest_info()
+        self.assertEqual(event.total_guest, 3)
+
+    def test_dashboard_tiles_data(self):
+        from dateutil.relativedelta import relativedelta
+
+        self.env['fiesta.event'].search([]).unlink()
+        self.env.cr.flush() # Force PostgreSQL à vider les données avant de continuer le test
+        today = fields.Date.context_today(self.env.user)
+        last_day_current_month = today.replace(day=1) + relativedelta(months=1) - timedelta(days=1)
+        next_month_date = last_day_current_month + timedelta(days=5)
+
+        ev_active = self._create_event(name='Actif ce mois', date=last_day_current_month)
+        ev_cancelled = self._create_event(name='Annulé ce mois', date=today)
+        ev_cancelled.with_user(self.manager_user).action_cancel()
+        self._create_event(name='Mois prochain', date=next_month_date)
+
+        data = self.env['fiesta.event.dashboard'].with_context(lang='fr_FR').get_tiles_data()
+        self.assertEqual(data['count_upcoming_events'], 1)
+        self.assertEqual(data['count_events_of_this_month'], 1)
+        self.assertEqual(data['percentage_of_events_this_month'], 100.0)
+        self.assertEqual(len(data['chart_values']), 6)
+        self.assertTrue(ev_active.exists())
